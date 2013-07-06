@@ -1,19 +1,21 @@
 #!/bin/bash
 
+error () {
+  echo $1
+  echo "do sumpin liek"
+  echo "  mln \${real} \${link} '\${opts}' (think \`cp existing new\`)"
+  echo "v0.1 copyright michael fairhurst"
+  exit $2
+}
+
 if [ -z "$1" ]
 then
-  echo "you no has a REAL"
-  echo "do sumpin liek"
-  echo "  mln \${real} \${link} '\${opts}' (think cp from to)"
-  exit 1
+  error "you no has a REAL" 1
 fi
 
 if [ -z "$2" ]
 then
-  echo "you no has a LINK"
-  echo "do sumpin liek"
-  echo "  mln \${real} \${link} '\${opts}' (think cp from to)"
-  exit 2
+  error "you no has a LINK" 2
 fi
 
 REAL=$(readlink -f "$1")
@@ -30,26 +32,17 @@ if [ -e "$REAL" ]
 then
   :
 else
-  echo "your \${real} doesnt exist mang"
-  echo "do sumpin liek"
-  echo "  mln \${real} \${link} '\${opts}' (think cp from to)"
-  exit 3
+  error "your \${real} doesnt exist mang" 3
 fi
 
 if [ -e "$LINK" ]
 then
-  echo "your \${link} exists mang"
-  echo "do sumpin liek"
-  echo "  mln \${real} \${link} '\${opts}' (think cp from to)"
-  exit 4
+  error "your \${link} exists mang" 4
 fi
 
 LINK_DIR=$(dirname "$LINK")
 LINK_BASE=$(basename "$LINK")
 
-#echo "cd $LINK_DIR && ln -T $REAL $LINK_BASE $OPTS && exit 0"
-#exit 0
 cd $LINK_DIR && ln -T $REAL $LINK_BASE $OPTS && exit 0
 
-echo "shit something went wrong and I aint gotta clue what"
-exit 4
+error "shit something went wrong and I aint gotta clue what" 4
